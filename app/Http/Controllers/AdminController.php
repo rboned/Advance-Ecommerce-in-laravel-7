@@ -16,7 +16,7 @@ class AdminController extends Controller
         $this->service = new SessionStatusService;
     }
 
-    public function index(){
+    public function index($id){
         $data = User::select(\DB::raw("COUNT(*) as count"), \DB::raw("DAYNAME(created_at) as day_name"), \DB::raw("DAY(created_at) as day"))
         ->where('created_at', '>', Carbon::today()->subDay(6))
         ->groupBy('day_name','day')
@@ -31,9 +31,21 @@ class AdminController extends Controller
             }
             //  return $data;
             return view('backend.index')->with('users', json_encode($array));
-        } else {
+        } elseif ($id) {
+            if ($data->count() == 0) {
+                $array[] = ['Name', 'Number'];
+                foreach($data as $key => $value)
+                {
+                    $array[++$key] = [$value->day_name, $value->count];
+                }
+            } else {
+                return view('backend.index');
+            }
+        else {
             return view('backend.index');
         }
+            
+        return 0;
     }
 
     public function settingsUpdate(Request $request){
