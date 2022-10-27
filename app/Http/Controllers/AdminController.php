@@ -11,9 +11,9 @@ use Carbon\Carbon;
 use Spatie\Activitylog\Models\Activity;
 class AdminController extends Controller
 {
-    public function __construct(SessionStatusService $service)
+    public function __construct()
     {
-        $this->service = $service;
+        $this->service = new SessionStatusService;
     }
 
     public function index(){
